@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {NavLink, useLocation} from "react-router-dom";
 import {RiFolderAddLine} from "react-icons/ri";
-import { CiViewList } from "react-icons/ci";
+import {CiViewList} from "react-icons/ci";
 import {
     Home,
     BookOpen,
@@ -41,11 +41,22 @@ function Sidebar({isOpen}) {
             id: "main",
             items: [{icon: Home, label: "Bosh sahifa", path: "/admin"}],
         },
+
+        {
+            id: "application",
+            items: [{icon: Home, label: "Arizalar", path: "/application"}],
+        },
+        {
+            id: "rating",
+            items: [{icon: Home, label: "Reyting daftarcha", path: "/rating"}],
+        },
+        {
+            id: "profile",
+            items: [{icon: Home, label: "Profil", path: "/profile"}],
+        },
         {
             id: "academic",
-            // title: "Talabalar",
             items: [
-                // {icon: RiFolderAddLine, label: "Fakultet qo'shish", path: "/create-faculty"},
                 {icon: CiViewList, label: "Barcha talabalar", path: "/list-category"},
             ],
         },

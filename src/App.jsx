@@ -10,7 +10,6 @@ import HemisLogo from "./components/HemisLogo";
 import Sidebar from "./components/Sidebar";
 import Dashboard from "./pages/Dashboard";
 
-import Schedule from "./pages/Schedule";
 import {Toaster} from "react-hot-toast";
 
 import LoginPage from "./pages/LoginPage.jsx";
@@ -19,25 +18,13 @@ import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Fade from "@mui/material/Fade";
-// import {logout} from "./Api/LoginApi.jsx";
 
-import CreateFaculty from "./pages/Faculty/CreateFaculty.jsx";
-import ListFaculty from "./pages/Faculty/ListFaculty.jsx";
-import UpdateFaculty from "./pages/Faculty/UpdateFaculty.jsx";
 
-import CreateCategory from "./pages/Category/CreateCategory.jsx";
-import ListCategory from "./pages/Category/ListCategory.jsx";
-import UpdateCategory from "./pages/Category/UpdateCategory.jsx";
-import CreateDepartment from "./pages/Department/CreateDepartment.jsx";
-import ListDepartment from "./pages/Department/ListDepartment.jsx";
-import UpdateDepartment from "./pages/Department/UpdateDepartment.jsx";
-import CreateCategoryPage from "./pages/CategoryPage/CreateCategoryPage.jsx";
-import ListCategoryPage from "./pages/CategoryPage/ListCategoryPage.jsx";
-import UpdateCategoryPage from "./pages/CategoryPage/UpdateCategoryPage.jsx";
 import Profile from "./pages/Profile.jsx";
 import {useQuery} from "@tanstack/react-query";
-import {detailUser} from "./Api/UserApi.jsx";
-import StudentDetail from "./pages/Category/StudentDetail.jsx";
+import Applications from "./pages/Applications.jsx";
+import RatingBook from "./pages/RatingBook.jsx";
+
 
 function ProtectedRoute({children}) {
     const token = JSON.parse(localStorage.getItem("token"));
@@ -62,7 +49,6 @@ function App() {
         queryKey: ["user-detail"],
         queryFn: () => detailUser(),
     });
-
 
 
     const [anchorEl, setAnchorEl] = useState(null);
@@ -161,122 +147,41 @@ function App() {
 
                         <Route
                             path="/admin"
-                            element={<Dashboard/>}
+
+                            element={
+                                <ProtectedRoute>
+                                    <Dashboard/>
+                                </ProtectedRoute>
+                            }
+
                         />
 
                         <Route
                             path="/profile"
-                            element={<Profile/>}
-                        />
-                        <Route path="*" element={<div>404 - Sahifa topilmadi</div>} />
-
-                        {/*<Route*/}
-                        {/*    path="/create-faculty"*/}
-                        {/*    element={*/}
-
-                        {/*            <CreateFaculty/>*/}
-
-                        {/*    }*/}
-                        {/*/>*/}
-
-                        {/*<Route*/}
-                        {/*    path="/list-faculty"*/}
-                        {/*    element={*/}
-                        {/*        <ProtectedRoute>*/}
-                        {/*            <ListFaculty/>*/}
-                        {/*        </ProtectedRoute>*/}
-                        {/*    }*/}
-                        {/*/>*/}
-                        {/*<Route*/}
-                        {/*    path="/update-faculty/:facultyId"*/}
-                        {/*    element={*/}
-                        {/*        <ProtectedRoute>*/}
-                        {/*            <UpdateFaculty/>*/}
-                        {/*        </ProtectedRoute>*/}
-                        {/*    }*/}
-                        {/*/>*/}
-                        <Route
-                            path="/student-detail/:studentId"
                             element={
                                 <ProtectedRoute>
-                                    <StudentDetail/>
+                                    <Profile/>
                                 </ProtectedRoute>
                             }
                         />
-                        {/*<Route*/}
-                        {/*    path="/create-category"*/}
-                        {/*    element={*/}
-                        {/*        <ProtectedRoute>*/}
-                        {/*            <CreateCategory/>*/}
-                        {/*        </ProtectedRoute>*/}
-                        {/*    }*/}
-                        {/*/>*/}
                         <Route
-                            path="/list-category"
+                            path="/application"
                             element={
                                 <ProtectedRoute>
-                                    <ListCategory/>
+                                    <Applications/>
                                 </ProtectedRoute>
                             }
                         />
-                        {/*<Route*/}
-                        {/*    path="/update-category/:categoryId"*/}
-                        {/*    element={*/}
-                        {/*        <ProtectedRoute>*/}
-                        {/*            <UpdateCategory/>*/}
-                        {/*        </ProtectedRoute>*/}
-                        {/*    }*/}
-                        {/*/>*/}
+                        <Route
+                            path="/rating"
+                            element={
+                                <ProtectedRoute>
+                                    <RatingBook/>
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route path="*" element={<div>404 - Sahifa topilmadi</div>}/>
 
-                        {/*<Route*/}
-                        {/*    path="/create-department"*/}
-                        {/*    element={*/}
-                        {/*        <ProtectedRoute>*/}
-                        {/*            <CreateDepartment/>*/}
-                        {/*        </ProtectedRoute>*/}
-                        {/*    }*/}
-                        {/*/>*/}
-                        {/*<Route*/}
-                        {/*    path="/list-department"*/}
-                        {/*    element={*/}
-                        {/*        <ProtectedRoute>*/}
-                        {/*            <ListDepartment/>*/}
-                        {/*        </ProtectedRoute>*/}
-                        {/*    }*/}
-                        {/*/>*/}
-                        {/*<Route*/}
-                        {/*    path="/update-department/:departmentId"*/}
-                        {/*    element={*/}
-                        {/*        <ProtectedRoute>*/}
-                        {/*            <UpdateDepartment/>*/}
-                        {/*        </ProtectedRoute>*/}
-                        {/*    }*/}
-                        {/*/>*/}
-
-                        {/*<Route*/}
-                        {/*    path="/create-category-page"*/}
-                        {/*    element={*/}
-                        {/*        <ProtectedRoute>*/}
-                        {/*            <CreateCategoryPage/>*/}
-                        {/*        </ProtectedRoute>*/}
-                        {/*    }*/}
-                        {/*/>*/}
-                        {/*<Route*/}
-                        {/*    path="/list-category-page"*/}
-                        {/*    element={*/}
-                        {/*        <ProtectedRoute>*/}
-                        {/*            <ListCategoryPage/>*/}
-                        {/*        </ProtectedRoute>*/}
-                        {/*    }*/}
-                        {/*/>*/}
-                        {/*<Route*/}
-                        {/*    path="/update-category-page/:categoryPageId"*/}
-                        {/*    element={*/}
-                        {/*        <ProtectedRoute>*/}
-                        {/*            <UpdateCategoryPage/>*/}
-                        {/*        </ProtectedRoute>*/}
-                        {/*    }*/}
-                        {/*/>*/}
 
                     </Routes>
                     <Toaster/>

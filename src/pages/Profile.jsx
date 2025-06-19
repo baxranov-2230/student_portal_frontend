@@ -1,21 +1,13 @@
-import React from "react";
+import React, { useState, useRef } from "react";
 import { Camera } from "lucide-react";
-import {useQuery} from "@tanstack/react-query";
-import {detailUser} from "../Api/UserApi.jsx";
 
 function Profile() {
-
-  // const userId = localStorage.getItem("userId");
-  const {data} = useQuery({
-    queryKey: ["user-detail"],
-    queryFn: () => detailUser(),
-  });
-  console.log(data)
-
+  const [profileImage, setProfileImage] = useState(null);
+  const fileInputRef = useRef(null);
 
   const studentInfo = {
     personal: {
-      fullName: "sd",
+      fullName: "Eshmatov Toshmat",
       birthDate: "1999-05-15",
       passport: "AA1234567",
       phone: "+998 90 123 45 67",
@@ -32,6 +24,21 @@ function Profile() {
     },
   };
 
+  const handleImageClick = () => {
+    fileInputRef.current.click();
+  };
+
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfileImage(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <h2 className="text-2xl font-bold text-gray-800">Profil</h2>
@@ -39,38 +46,56 @@ function Profile() {
       <div className="bg-white rounded-lg shadow">
         <div className="p-6 flex flex-col md:flex-row items-start space-y-6 md:space-y-0 md:space-x-6">
           <div className="relative">
-            <div className="w-32 h-32 rounded-lg bg-gray-200 flex items-center justify-center">
-              <span className="text-3xl font-bold text-gray-400">
-                <img src={data?.image_path} alt=""/>
-              </span>
+            <div
+              className="w-32 h-32 rounded-lg bg-gray-200 flex items-center justify-center overflow-hidden cursor-pointer"
+              onClick={handleImageClick}
+            >
+              {profileImage ? (
+                <img
+                  src={profileImage}
+                  alt="Profile"
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <span className="text-3xl font-bold text-gray-400">ET</span>
+              )}
             </div>
-            <button className="absolute bottom-2 right-2 bg-white rounded-full p-1.5 shadow-lg">
+            <button
+              className="absolute bottom-2 right-2 bg-white rounded-full p-1.5 shadow-lg"
+              onClick={handleImageClick}
+            >
               <Camera className="h-4 w-4 text-gray-600" />
             </button>
+            <input
+              type="file"
+              ref={fileInputRef}
+              className="hidden"
+              accept="image/*"
+              onChange={handleImageChange}
+            />
           </div>
 
           <div className="flex-1">
             <h3 className="text-xl font-semibold text-gray-800 mb-4">
-              {/*{studentInfo.personal.fullName}*/}
-              {data?.full_name}
+              {studentInfo.personal.fullName}
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <p className="text-sm text-gray-500">Fakultet</p>
-                <p className="font-medium">{data?.faculty}</p>
+                <p className="font-medium">{studentInfo.academic.faculty}</p>
               </div>
               <div>
                 <p className="text-sm text-gray-500">Yo'nalish</p>
-                <p className="font-medium">{data?.specialty}</p>
+                <p className="font-medium">{studentInfo.academic.direction}</p>
               </div>
               <div>
                 <p className="text-sm text-gray-500">Guruh</p>
-                <p className="font-medium">{data?.group}</p>
+                <p className="font-medium">{studentInfo.academic.group}</p>
               </div>
               <div>
                 <p className="text-sm text-gray-500">Kurs</p>
                 <p className="font-medium">
-                  {data?.level}
+                  {studentInfo.academic.course}-kurs
                 </p>
               </div>
             </div>
@@ -85,23 +110,23 @@ function Profile() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <p className="text-sm text-gray-500">Tug'ilgan sana</p>
-                <p className="font-medium">{data?.birth_date}</p>
+                <p className="font-medium">{studentInfo.personal.birthDate}</p>
               </div>
               <div>
                 <p className="text-sm text-gray-500">Passport</p>
-                <p className="font-medium">{data?.passport_number}</p>
+                <p className="font-medium">{studentInfo.personal.passport}</p>
               </div>
               <div>
                 <p className="text-sm text-gray-500">Telefon</p>
-                <p className="font-medium">{data?.phone}</p>
+                <p className="font-medium">{studentInfo.personal.phone}</p>
               </div>
               <div>
                 <p className="text-sm text-gray-500">Email</p>
-                <p className="font-medium"></p>
+                <p className="font-medium">{studentInfo.personal.email}</p>
               </div>
               <div className="md:col-span-2">
                 <p className="text-sm text-gray-500">Manzil</p>
-                <p className="font-medium">{data?.address}</p>
+                <p className="font-medium">{studentInfo.personal.address}</p>
               </div>
             </div>
           </div>
@@ -115,12 +140,12 @@ function Profile() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <p className="text-sm text-gray-500">O'qish turi</p>
-                <p className="font-medium">{data?.educationType}</p>
+                <p className="font-medium">{studentInfo.academic.type}</p>
               </div>
               <div>
                 <p className="text-sm text-gray-500">Holati</p>
                 <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                  {data?.studentStatus}
+                  {studentInfo.academic.status}
                 </span>
               </div>
             </div>
