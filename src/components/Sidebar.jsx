@@ -22,7 +22,7 @@ import {
     ChevronDown,
 
 } from "lucide-react";
-
+import { CgProfile } from "react-icons/cg";
 function Sidebar({isOpen}) {
     const location = useLocation();
     const [expandedCategories, setExpandedCategories] = useState(["/"]);
@@ -52,7 +52,7 @@ function Sidebar({isOpen}) {
         },
         {
             id: "profile",
-            items: [{icon: Home, label: "Profil", path: "/profile"}],
+            items: [{icon: CgProfile, label: "Profil", path: "/profile"}],
         },
         {
             id: "academic",

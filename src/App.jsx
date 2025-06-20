@@ -60,8 +60,8 @@ function App() {
         setAnchorEl(null);
     };
     const handleLogout = async () => {
-        await logout();
-        navigate("/login");
+        localStorage.removeItem("token");
+        return <Navigate to="/login" state={{from: location}} replace/>;
     };
     return (
         <div className="min-h-screen bg-gray-100 flex flex-col">
