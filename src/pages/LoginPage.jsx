@@ -35,7 +35,8 @@ export default function LoginPage() {
 
     useEffect(() => {
         if (isSuccess) {
-            navigate("/profile");
+            navigate("/admin");
+            window.location.reload();
         }
     }, [navigate, isSuccess]);
     const formik = useFormik({
@@ -58,7 +59,7 @@ export default function LoginPage() {
     // const isLoading = loginMutation.isLoading;
 
     return (
-        <div className="bg-gray-100 flex justify-center p-20 m-0 overflow-hidden">
+        <div className="bg-gray-100 flex min-h-screen justify-center items-center  overflow-hidden">
             <div
                 className="bg-white rounded-lg shadow-lg w-full max-w-6xl h-[80%] md:h-[80%] flex flex-col md:flex-row overflow-hidden">
                 {/* Chap qism */}
@@ -83,7 +84,7 @@ export default function LoginPage() {
                         </div>
                     </div>
                     <h2 className="text-2xl font-bold text-center mb-6">
-                        Dashboardga kirish
+                        Kabinitga kirish
                     </h2>
 
                     {/*<div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 text-sm">*/}
@@ -126,82 +127,4 @@ export default function LoginPage() {
             </div>
         </div>
     )
-    // return (
-    //     <div className="w-full flex justify-center">
-    //         {/* {isLoading && <p>Loading...</p>} */}
-    //
-    //         <Card color="transparent" shadow={false} className="bg-sky-200 p-10">
-    //             <Typography variant="h4" color="blue-gray">
-    //                 Sign in
-    //             </Typography>
-    //             <form
-    //                 className="mt-8 mb-2 w-80 max-w-screen-lg sm:w-96"
-    //                 onSubmit={formik.handleSubmit}
-    //             >
-    //                 <div className="mb-1 flex flex-col gap-6">
-    //                     <Typography variant="h6" color="blue-gray" className="-mb-3">
-    //                         Your username
-    //                     </Typography>
-    //                     <Input
-    //                         size="lg"
-    //                         placeholder="name@mail.com"
-    //                         name="username"
-    //                         className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
-    //                         labelProps={{
-    //                             className: "before:content-none after:content-none",
-    //                         }}
-    //                         {...formik.getFieldProps("username")}
-    //                     />
-    //                     {formik.touched.username && formik.errors.username && (
-    //                         <span>{formik.errors.username}</span>
-    //                     )}
-    //                     <Typography variant="h6" color="blue-gray" className="-mb-3">
-    //                         Password
-    //                     </Typography>
-    //                     <Input
-    //                         type="password"
-    //                         size="lg"
-    //                         name="password"
-    //                         placeholder="********"
-    //                         className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
-    //                         labelProps={{
-    //                             className: "before:content-none after:content-none",
-    //                         }}
-    //                         {...formik.getFieldProps("password")}
-    //                     />
-    //                     {formik.touched.password && formik.errors.password && (
-    //                         <span>{formik.errors.password}</span>
-    //                     )}
-    //                 </div>
-    //                 <Checkbox
-    //                     label={
-    //                         <Typography
-    //                             variant="small"
-    //                             color="gray"
-    //                             className="flex items-center font-normal"
-    //                         >
-    //                             I agree the
-    //                             <a
-    //                                 href="#"
-    //                                 className="font-medium transition-colors hover:text-gray-900"
-    //                             >
-    //                                 &nbsp;Terms and Conditions
-    //                             </a>
-    //                         </Typography>
-    //                     }
-    //                     containerProps={{className: "-ml-2.5"}}
-    //                 />
-    //                 <Button type="submit" className="mt-6 bg-cyan-400" fullWidth>
-    //                     sign in
-    //                 </Button>
-    //                 <Typography color="gray" className="mt-4 text-center font-normal">
-    //                     Already have an account?{" "}
-    //                     <a href="#" className="font-medium text-gray-900">
-    //                         Sign In
-    //                     </a>
-    //                 </Typography>
-    //             </form>
-    //         </Card>
-    //     </div>
-    // );
 }

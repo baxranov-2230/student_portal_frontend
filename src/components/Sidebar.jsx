@@ -1,7 +1,8 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {NavLink, useLocation} from "react-router-dom";
 import {RiFolderAddLine} from "react-icons/ri";
 import {CiViewList} from "react-icons/ci";
+import logo from "../assets/images/logo_top.png";
 import {
     Home,
     BookOpen,
@@ -22,10 +23,25 @@ import {
     ChevronDown,
 
 } from "lucide-react";
-import { CgProfile } from "react-icons/cg";
+import {CgProfile} from "react-icons/cg";
+import {jwtDecode} from "jwt-decode";
+
 function Sidebar({isOpen}) {
     const location = useLocation();
     const [expandedCategories, setExpandedCategories] = useState(["/"]);
+    const token = JSON.parse(localStorage.getItem("token"));
+    const [userRole, setUserRole] = useState("");
+
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (token) {
+            const decoded = jwtDecode(token);
+            setUserRole(decoded?.role);
+        } else {
+            setUserRole(null);
+        }
+    }, [localStorage.getItem("token")]);
+
 
     const toggleCategory = (category) => {
         setExpandedCategories((prev) =>
@@ -36,104 +52,54 @@ function Sidebar({isOpen}) {
     };
 
     let menuCategories;
-    menuCategories = [
-        {
-            id: "main",
-            items: [{icon: Home, label: "Bosh sahifa", path: "/admin"}],
-        },
+    if (userRole === "admin") {
+        menuCategories = [
 
-        {
-            id: "application",
-            items: [{icon: Home, label: "Arizalar", path: "/application"}],
-        },
-        {
-            id: "rating",
-            items: [{icon: Home, label: "Reyting daftarcha", path: "/rating"}],
-        },
-        {
-            id: "profile",
-            items: [{icon: CgProfile, label: "Profil", path: "/profile"}],
-        },
-        {
-            id: "academic",
-            items: [
-                {icon: CiViewList, label: "Barcha talabalar", path: "/list-category"},
-            ],
-        },
-        // {
-        //     id: "category",
-        //     title: "Category",
-        //     items: [
-        //         {icon: RiFolderAddLine, label: "Kategory qo'shish", path: "/create-category"},
-        //         {icon: CiViewList, label: "Hamma kategoriyalar", path: "/list-category"},
-        //     ],
-        // },
-        // {
-        //     id: "department",
-        //     title: "Kafedralar",
-        //     items: [
-        //         {icon: RiFolderAddLine, label: "Kafedra qo'shish", path: "/create-department"},
-        //         {icon: CiViewList, label: "Hamma kafedralar", path: "/list-department"},
-        //     ],
-        // },
-        // {
-        //     id: "category_page",
-        //     title: "Kategoriya page",
-        //     items: [
-        //         {icon: RiFolderAddLine, label: "Page qo'shish", path: "/create-category-page"},
-        //         {icon: CiViewList, label: "Hamma pagelar", path: "/list-category-page"},
-        //     ],
-        // }
-        // {
-        //     id: "academics",
-        //     title: "O'quv jarayoni",
-        //     items: [
-        //         {icon: BookOpen, label: "O'quv reja", path: "/study-plan"},
-        //         {icon: Calendar, label: "Dars jadvali", path: "/schedule"},
-        //         {icon: Users, label: "Guruhlar", path: "/groups"},
-        //         {icon: GraduationCap, label: "Fanlar", path: "/subjects"},
-        //         {icon: ClipboardList, label: "Nazoratlar", path: "/controls"},
-        //         {icon: Award, label: "Reyting daftarcha", path: "/rating-book"},
-        //         {icon: BookCheck, label: "Davomatlar", path: "/attendance"},
-        //         {icon: BookCheck, label: "Department", path: "/department"},
-        //     ],
-        // },
-        // {
-        //     id: "documents",
-        //     title: "Hujjatlar",
-        //     items: [
-        //         {icon: ScrollText, label: "Arizalar", path: "/applications"},
-        //         {icon: FileText, label: "Qaydnomalar", path: "/records"},
-        //         {icon: Building2, label: "Shartnomalar", path: "/contracts"},
-        //     ],
-        // },
-        // {
-        //     id: "finance",
-        //     title: "Moliya",
-        //     items: [
-        //         {icon: CreditCard, label: "To'lovlar", path: "/payments"},
-        //         {icon: Wallet, label: "Stipendiya", path: "/scholarship"},
-        //     ],
-        // },
-        // {
-        //     id: "settings",
-        //     title: "Sozlamalar",
-        //     items: [
-        //         {icon: UserCircle, label: "Profil", path: "/profile"},
-        //         {icon: Settings, label: "Tizim", path: "/settings"},
-        //     ],
-        // },
-    ];
+            {
+                id: "main",
+                items: [{icon: Home, label: "Bosh sahifa", path: "/admin"}],
+            },
+            {
+                id: "academic",
+                items: [
+                    {icon: CiViewList, label: "Barcha talabalar", path: "/list-application"},
+                ],
+            },
+
+        ];
+    } else if (userRole === "student") {
+        menuCategories = [
+
+            {
+                id: "application",
+                items: [{icon: Home, label: "Arizalar", path: "/application"}],
+            },
+            {
+                id: "rating",
+                items: [{icon: Home, label: "Reyting daftarcha", path: "/rating"}],
+            },
+            {
+                id: "profile",
+                items: [{icon: CgProfile, label: "Profil", path: "/profile"}],
+            },
+
+
+        ];
+    }
+
 
     return (
         <aside
-            className={`fixed left-0 top-16 h-[calc(100vh-4rem)] bg-white shadow-lg transition-all duration-300 ${
+            className={`fixed left-0 top-0 h-[calc(100vh)] bg-white    shadow-lg transition-all duration-300 ${
                 isOpen ? "w-64" : "w-20"
             } z-10 overflow-y-auto`}
         >
             <nav className="p-4">
-                {menuCategories.map((category) => (
-                    <div key={category.id} className="mb-4">
+                <div className="flex items-center justify-center pb-4  px-16 border-b-2">
+                    <img src={logo} alt=""/>
+                </div>
+                {menuCategories?.map((category) => (
+                    <div key={category.id} className="my-4">
                         {category.title && isOpen && (
                             <button
                                 onClick={() => toggleCategory(category.id)}
@@ -161,10 +127,10 @@ function Sidebar({isOpen}) {
                                     <NavLink
                                         to={item.path}
                                         className={({isActive}) => `
-                      flex items-center p-3 rounded-lg transition-colors
+                      flex items-center p-3 rounded-lg  transition-all duration-300
                       ${
                                             isActive
-                                                ? "bg-blue-50 text-[#2557A7]"
+                                                ? "bg-[#E7E7FF] text-[#696CFF] font-semibold"
                                                 : "text-gray-700 hover:bg-gray-100"
                                         }
                     `}

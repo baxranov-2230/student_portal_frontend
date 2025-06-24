@@ -24,18 +24,17 @@ import Profile from "./pages/Profile.jsx";
 import {useQuery} from "@tanstack/react-query";
 import Applications from "./pages/Applications.jsx";
 import RatingBook from "./pages/RatingBook.jsx";
+import {UserMe} from "./Api/UserApi.jsx";
+import {jwtDecode} from "jwt-decode";
+import ListApplication from "./pages/ListApplication.jsx";
 
 
 function ProtectedRoute({children}) {
     const token = JSON.parse(localStorage.getItem("token"));
-
     const location = useLocation();
-
     if (!token) {
-        // Agar token mavjud bo'lmasa, login sahifasiga yo'naltirish
-        return <Navigate to="/login" state={{from: location}} replace/>;
+            return <Navigate to="/login" state={{from: location}} replace/>;
     }
-
     return children;
 }
 
@@ -44,12 +43,22 @@ function App() {
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
     const location = useLocation(); // Get current route location
     const isLoginPage = location.pathname === "/login" || location.pathname === "/";
+    const [userRole, setUserRole] = useState("");
 
-    const {data} = useQuery({
-        queryKey: ["user-detail"],
-        queryFn: () => detailUser(),
-    });
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (token) {
+            const decoded = jwtDecode(token);
+            setUserRole(decoded.role);
+        } else {
+            setUserRole(null);
+        }
+    }, [localStorage.getItem("token")]);
 
+    const {isError, isSuccess, isLoading, data: student, error, refetch} = useQuery({
+        queryKey: ['userMe'],
+        queryFn: UserMe,
+    })
 
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
@@ -64,76 +73,80 @@ function App() {
         return <Navigate to="/login" state={{from: location}} replace/>;
     };
     return (
-        <div className="min-h-screen bg-gray-100 flex flex-col">
-            {/* Header */}
-            {!isLoginPage && (
-                <header className="bg-[#2557A7] text-white fixed w-full z-10">
-                    <div className="px-4">
-                        <div className="flex items-center justify-between h-16">
-                            <div className="flex items-center space-x-4">
-                                <MenuIcon
-                                    className="h-6 w-6 cursor-pointer"
-                                    onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                                />
-                                <HemisLogo className="h-8"/>
-                            </div>
-                            <div className="flex items-center space-x-6">
-                                {/* <Globe2 className="h-5 w-5 cursor-pointer" /> */}
-                                <Bell className="h-5 w-5 cursor-pointer"/>
+        <div className="min-h-screen bg-[#F5F5F9] ">
+            <div className={` ${!isLoginPage ? "pt-8" : ""}`}>
+                {!isLoginPage && <Sidebar isOpen={isSidebarOpen}/>}
+                <header className={`bg-white px-6 mr-6 transition-all duration-300  text-black sticky top-0   z-10 ${
+                    !isLoginPage && isSidebarOpen
+                        ? "ml-72"
+                        : !isLoginPage
+                            ? "ml-28"
+                            : "hidden "
+                }`}
+                >
 
-                                <div>
-                                    <Button
-                                        id="fade-button"
-                                        aria-controls={open ? "fade-menu" : undefined}
-                                        aria-haspopup="true"
-                                        aria-expanded={open ? "true" : undefined}
-                                        onClick={handleClick}
-                                    >
-                                        <div className="flex items-center space-x-3 text-white">
-                                            <div
-                                                className="h-8 w-8 rounded-full bg-white/20 flex items-center justify-center">
-                                                <span className="text-sm font-medium">JS</span>
-                                            </div>
-                                            <div className="hidden md:block">
-                                                <div className="text-sm font-medium">{data?.full_name}</div>
-                                                <div className="text-xs text-gray-300">Student</div>
-                                            </div>
+                    <div className="flex  items-center justify-between  h-16">
+                        <div className="flex items-center space-x-4">
+                            <MenuIcon
+                                className="h-6 w-6 cursor-pointer"
+                                onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                            />
+                            <HemisLogo className="h-8"/>
+                        </div>
+                        <div className="flex items-center space-x-6">
+                            <Bell className="h-5 w-5 cursor-pointer"/>
+                            <div>
+                                <Button
+                                    id="fade-button"
+                                    aria-controls={open ? "fade-menu" : undefined}
+                                    aria-haspopup="true"
+                                    aria-expanded={open ? "true" : undefined}
+                                    onClick={handleClick}
+                                >
+                                    <div className="flex items-center space-x-3 text-black">
+                                        <div
+                                            className="h-8 w-8 rounded-full bg-[#E7E7FF] flex items-center justify-center">
+                                            <span className="text-sm font-medium">JS</span>
                                         </div>
-                                    </Button>
-                                    <Menu
-                                        id="fade-menu"
-                                        MenuListProps={{
-                                            "aria-labelledby": "fade-button",
+                                        <div className="hidden md:block">
+                                            {userRole === "student" && (
+                                                <div className="text-sm font-medium">{student?.first_name}</div>
+                                            )}
+                                            {/*<div className="text-sm font-medium">{student?.first_name}</div>*/}
+                                            <div className="text-xs text-black">{userRole}</div>
+                                        </div>
+                                    </div>
+                                </Button>
+                                <Menu
+                                    id="fade-menu"
+                                    MenuListProps={{
+                                        "aria-labelledby": "fade-button",
+                                    }}
+                                    anchorEl={anchorEl}
+                                    open={open}
+                                    onClose={handleClose}
+                                    TransitionComponent={Fade}
+                                >
+                                    <MenuItem onClick={handleClose}>
+                                        <Link to="/profile">Profile</Link>
+                                    </MenuItem>
+                                    <MenuItem onClick={handleClose}>My account</MenuItem>
+                                    <MenuItem
+                                        onClick={() => {
+                                            handleLogout();
+                                            handleClose();
                                         }}
-                                        anchorEl={anchorEl}
-                                        open={open}
-                                        onClose={handleClose}
-                                        TransitionComponent={Fade}
                                     >
-                                        <MenuItem onClick={handleClose}>
-                                            <Link to="/profile">Profile</Link>
-                                        </MenuItem>
-                                        <MenuItem onClick={handleClose}>My account</MenuItem>
-                                        <MenuItem
-                                            onClick={() => {
-                                                handleLogout();
-                                                handleClose();
-                                            }}
-                                        >
-                                            Logout
-                                        </MenuItem>
-                                    </Menu>
-                                </div>
+                                        Logout
+                                    </MenuItem>
+                                </Menu>
                             </div>
                         </div>
                     </div>
+
                 </header>
-            )}
-            <div className={`flex ${!isLoginPage ? "pt-16" : ""}`}>
-                {/* Show sidebar only when not on login page */}
-                {!isLoginPage && <Sidebar isOpen={isSidebarOpen}/>}
                 <main
-                    className={`flex-1 p-6 transition-all duration-300 ${
+                    className={` p-6  transition-all duration-300 ${
                         !isLoginPage && isSidebarOpen
                             ? "ml-64"
                             : !isLoginPage
@@ -141,6 +154,7 @@ function App() {
                                 : ""
                     }`}
                 >
+
                     <Routes>
                         <Route path="/" element={<LoginPage/>}/>
                         <Route path="/login" element={<LoginPage/>}/>
@@ -165,10 +179,10 @@ function App() {
                             }
                         />
                         <Route
-                            path="/application"
+                            path="/list-application"
                             element={
                                 <ProtectedRoute>
-                                    <Applications/>
+                                    <ListApplication/>
                                 </ProtectedRoute>
                             }
                         />
@@ -177,6 +191,14 @@ function App() {
                             element={
                                 <ProtectedRoute>
                                     <RatingBook/>
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="/application"
+                            element={
+                                <ProtectedRoute>
+                                    <Applications/>
                                 </ProtectedRoute>
                             }
                         />

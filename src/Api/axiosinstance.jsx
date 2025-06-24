@@ -5,6 +5,8 @@ import toast from "react-hot-toast";
 const API_URL = import.meta.env.VITE_API_URL;
 
 import {jwtDecode} from "jwt-decode";
+import {Navigate} from "react-router-dom";
+import React from "react";
 
 // import {refreshAccessToken} from "./LoginApi.jsx";
 
@@ -23,14 +25,6 @@ export const isTokenExpired = (token) => {
     return decoded.exp < currentTime;
 };
 
-// export const isTokenExpiredRefesh = (token) => {
-//     if (!token) return true;
-//     const decoded = jwtDecode(token);
-//     const currentTime = Date.now() / 1000;
-//     return decoded.exp < currentTime;
-// };
-
-
 axiosInstance.interceptors.request.use(async (config) => {
     const token = JSON.parse(localStorage.getItem("token"));
     if (
@@ -45,10 +39,10 @@ axiosInstance.interceptors.request.use(async (config) => {
             config.headers.Authorization = `Bearer ${token.access_token}`;
         }
     } else {
-        toast.error("Token davri tugadi");
+        // toast.error("Token davri tugadi");
         // await logout();
         // window.location.href = "/login";
-        return config;
+        return <Navigate to="/login" state={{from: location}} replace/>;
     }
 
     return config;
