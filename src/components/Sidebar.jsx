@@ -5,24 +5,12 @@ import {CiViewList} from "react-icons/ci";
 import logo from "../assets/images/logo_top.png";
 import {
     Home,
-    BookOpen,
-    Calendar,
-    Users,
-    FileText,
-    Settings,
-    GraduationCap,
-    ClipboardList,
-    Award,
-    BookCheck,
-    ScrollText,
-    Building2,
-    CreditCard,
-    UserCircle,
-    Wallet,
     ChevronRight,
     ChevronDown,
-
 } from "lucide-react";
+import {FaList} from "react-icons/fa6";
+import {LuNotebookText} from "react-icons/lu";
+import {MdOutlinePostAdd} from "react-icons/md";
 import {CgProfile} from "react-icons/cg";
 import {jwtDecode} from "jwt-decode";
 
@@ -31,7 +19,6 @@ function Sidebar({isOpen}) {
     const [expandedCategories, setExpandedCategories] = useState(["/"]);
     const token = JSON.parse(localStorage.getItem("token"));
     const [userRole, setUserRole] = useState("");
-
     useEffect(() => {
         const token = localStorage.getItem("token");
         if (token) {
@@ -41,8 +28,6 @@ function Sidebar({isOpen}) {
             setUserRole(null);
         }
     }, [localStorage.getItem("token")]);
-
-
     const toggleCategory = (category) => {
         setExpandedCategories((prev) =>
             prev.includes(category)
@@ -50,56 +35,56 @@ function Sidebar({isOpen}) {
                 : [...prev, category]
         );
     };
-
     let menuCategories;
     if (userRole === "admin") {
         menuCategories = [
-
             {
                 id: "main",
                 items: [{icon: Home, label: "Bosh sahifa", path: "/admin"}],
             },
             {
-                id: "academic",
+                id: "list",
                 items: [
-                    {icon: CiViewList, label: "Barcha talabalar", path: "/list-application"},
+                    {icon: FaList, label: "Qabul bo'lgan ", path: "/list-application"},
                 ],
             },
-
+            {
+                id: "no_list",
+                items: [
+                    {icon: FaList, label: "Rad bo'lgan ", path: "/no-list-application"},
+                ],
+            },
         ];
     } else if (userRole === "student") {
         menuCategories = [
-
             {
                 id: "application",
-                items: [{icon: Home, label: "Arizalar", path: "/application"}],
+                items: [{icon: MdOutlinePostAdd, label: "Arizalar", path: "/application"}],
             },
             {
                 id: "rating",
-                items: [{icon: Home, label: "Reyting daftarcha", path: "/rating"}],
+                items: [{icon: LuNotebookText, label: "Reyting daftarcha", path: "/rating"}],
             },
             {
                 id: "profile",
                 items: [{icon: CgProfile, label: "Profil", path: "/profile"}],
             },
-
-
         ];
     }
 
 
     return (
         <aside
-            className={`fixed left-0 top-0 h-[calc(100vh)] bg-white    shadow-lg transition-all duration-300 ${
-                isOpen ? "w-64" : "w-20"
+            className={`fixed bottom-0 w-full h-[calc(10vh)] sm:left-0 sm:top-0 sm:h-[calc(100vh)] bg-white shadow-lg transition-all duration-300 ${
+                isOpen ? "sm:w-64" : "sm:w-20"
             } z-10 overflow-y-auto`}
         >
-            <nav className="p-4">
-                <div className="flex items-center justify-center pb-4  px-16 border-b-2">
+            <nav className="p-4 flex sm:flex-col">
+                <div className="hidden sm:flex sm:items-center sm:justify-center pb-4  px-16 border-b-2">
                     <img src={logo} alt=""/>
                 </div>
                 {menuCategories?.map((category) => (
-                    <div key={category.id} className="my-4">
+                    <div key={category.id} className="my-1">
                         {category.title && isOpen && (
                             <button
                                 onClick={() => toggleCategory(category.id)}

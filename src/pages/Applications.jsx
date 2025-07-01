@@ -12,23 +12,16 @@ import {
 import {useFormik} from "formik";
 import * as Yup from "yup";
 import {Link, useNavigate} from "react-router-dom";
-import { FaDownload } from "react-icons/fa";
-
+import {FaDownload} from "react-icons/fa";
 
 function Applications() {
-
     const [values, setValues] = useState()
     const navigate = useNavigate();
-
     const [modalOpen, setModalOpen] = useState(false)
     const {data: applications} = useQuery({
         queryKey: ['application'],
         queryFn: GetUserApplications,
     })
-    // const {data: applications} = useQuery({
-    //     queryKey: ["list-application"], queryFn: GetApplications,
-    // });
-
     const {isError, isSuccess, isLoading, data: student, error, refetch} = useQuery({
         queryKey: ['userMe'],
         queryFn: UserMe,
@@ -46,7 +39,6 @@ function Applications() {
             });
         }
     }, [student]);
-
     const applicationMutation = useMutation({
         mutationKey: ["create-application"], mutationFn: CreateApplicationApi, onSuccess: (data) => {
             toast.success(data.message || "Ariza muvaffaqiyatli yaratildi");
@@ -72,8 +64,6 @@ function Applications() {
             applicationMutation.mutate(values);
         },
     });
-
-
     return (
         <div className="relative">
             <div className="space-y-6">
@@ -88,9 +78,9 @@ function Applications() {
                     </button>
                 </div>
 
-                <div className="bg-white rounded-lg shadow">
+                <div className="bg-white rounded-lg shadow overflow-x-auto">
                     <div className="p-4 overflow-auto">
-                        <table className="w-full">
+                        <table className="w-full min-w-[700px]">
                             <thead>
                             <tr className="text-left bg-gray-50 ">
                                 <th className="p-3 text-gray-600">Ariza ID</th>
@@ -113,7 +103,7 @@ function Applications() {
                                             onClick={() => downloadApplicationPdf(application.id)}
                                             className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-1 rounded"
                                         >
-                                            <FaDownload />
+                                            <FaDownload/>
                                         </button>
                                     </td>
                                     <td className="p-3 ">
@@ -121,7 +111,7 @@ function Applications() {
                                             onClick={() => downloadApplicationResponsePdf(application.id)}
                                             className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-1 rounded"
                                         >
-                                            <FaDownload />
+                                            <FaDownload/>
                                         </button>
                                     </td>
                                 </tr>
@@ -131,7 +121,6 @@ function Applications() {
                     </div>
                 </div>
             </div>
-
             {/* Modal */}
             {modalOpen && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -215,9 +204,6 @@ function Applications() {
                                 />
                             </div>
                             <div>
-                                {/*<label htmlFor="user_id" className="block text-sm font-medium text-gray-700">*/}
-                                {/*    Ism Familiya*/}
-                                {/*</label>*/}
                                 <input
                                     type="text"
                                     id="image_path"
@@ -225,13 +211,11 @@ function Applications() {
                                     {...formik.getFieldProps("image_path")}
                                     value={student.image_path}
                                     disabled
-                                    className="w-full mt-1 p-2 border border-gray-300 rounded"
+                                    className="hidden w-full mt-1 p-2 border border-gray-300 rounded"
                                 />
                             </div>
                             <div>
-                                {/*<label htmlFor="user_id" className="block text-sm font-medium text-gray-700">*/}
-                                {/*    Ism Familiya*/}
-                                {/*</label>*/}
+
                                 <input
                                     type="text"
                                     id="user_id"
@@ -239,10 +223,9 @@ function Applications() {
                                     {...formik.getFieldProps("user_id")}
                                     value={student.id}
                                     disabled
-                                    className="w-full mt-1 p-2 border border-gray-300 rounded"
+                                    className="hidden w-full mt-1 p-2 border border-gray-300 rounded"
                                 />
                             </div>
-
                             <button
                                 type="submit"
                                 className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"

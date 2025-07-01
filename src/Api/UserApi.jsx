@@ -5,8 +5,6 @@ export const UserMe = async () => {
     const userData = await axiosInstance.get(`${API_URL}/user/me`)
     return userData.data
 }
-
-
 export const CreateApplicationApi = async (applicationData) => {
     try {
         const response = await axiosInstance.post(
@@ -21,7 +19,6 @@ export const CreateApplicationApi = async (applicationData) => {
                 image_path: applicationData.image_path,
             },
         );
-
         return await response.data;
     } catch (error) {
         if (error.response && error.response.data.message) {
@@ -31,13 +28,36 @@ export const CreateApplicationApi = async (applicationData) => {
     }
 };
 
-export const GetApplications = async () => {
-    const application = await axiosInstance.get(`${API_URL}/admin/applications/get_all`)
-    return application.data
-}
+export const GetApplications = async ({limit = 25, offset = 0, min_gpa, max_gpa}) => {
+    const params = new URLSearchParams();
+    params.append("limit", limit);
+    params.append("offset", offset);
+    if (min_gpa !== undefined) {
+        params.append("min_gpa", min_gpa);
+    }
+    if (max_gpa !== undefined) {
+        params.append("max_gpa", max_gpa);
+    }
+
+    const application = await axiosInstance.get(
+        `${API_URL}/admin/applications/get_all?${params.toString()}`
+    );
+    return application.data;
+};
+
 export const GetUserApplications = async () => {
     const application = await axiosInstance.get(`${API_URL}/user/application/get_all`)
     return application.data
+}
+export const GetTotalApplications = async () => {
+    const total = await axiosInstance.get(`${API_URL}/admin/count/count_by_specialty`)
+    // console.log(total.data.total_applications)
+
+    return {
+        all: total.data.total_applications,
+        high: total.data.gpa_fit_applications,
+        low: total.data.gpa_not_fit_applications,
+    };
 }
 
 export const downloadApplicationPdf = async (applicationId) => {
@@ -48,7 +68,6 @@ export const downloadApplicationPdf = async (applicationId) => {
                 responseType: "blob", // blob kerak, chunki bu fayl
             }
         );
-
         const url = window.URL.createObjectURL(new Blob([response.data]));
         const link = document.createElement("a");
         link.href = url;
@@ -69,7 +88,6 @@ export const downloadApplicationResponsePdf = async (applicationId) => {
                 responseType: "blob", // blob kerak, chunki bu fayl
             }
         );
-
         const url = window.URL.createObjectURL(new Blob([response.data]));
         const link = document.createElement("a");
         link.href = url;
@@ -91,7 +109,6 @@ export const downloadApplicationAdminPdf = async (applicationId) => {
                 responseType: "blob", // blob kerak, chunki bu fayl
             }
         );
-
         const url = window.URL.createObjectURL(new Blob([response.data]));
         const link = document.createElement("a");
         link.href = url;

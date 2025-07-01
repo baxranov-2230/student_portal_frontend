@@ -1,4 +1,4 @@
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import {
     Card,
     Input,
@@ -14,18 +14,22 @@ import {replace, useFormik} from "formik";
 import * as Yup from "yup";
 import {LoginApi} from "../Api/LoginApi";
 import {LogIn} from 'lucide-react'
-
+import { GrHide } from "react-icons/gr";
+import { BiShow } from "react-icons/bi";
 
 export default function LoginPage() {
     const navigate = useNavigate();
     // const { login, isLoggedIn } = useAuthStore();
+    const [showPassword, setShowPassword] = useState(false);
 
+    const togglePassword = () => {
+        setShowPassword((prev) => !prev);
+    };
     const loginMutation = useMutation({
         mutationKey: ["login-user"],
         mutationFn: LoginApi,
         onSuccess: (data) => {
             toast.success(data.message || "Successfully");
-
         },
         onError: (error) => {
             toast.error(error.message);
@@ -56,10 +60,8 @@ export default function LoginPage() {
             loginMutation.mutate(loginDate);
         },
     });
-    // const isLoading = loginMutation.isLoading;
-
     return (
-        <div className="bg-gray-100 flex min-h-screen justify-center items-center  overflow-hidden">
+        <div className="bg-gray-100 w-full flex mt-[10%] min-h-[80%] justify-center items-center  overflow-hidden">
             <div
                 className="bg-white rounded-lg shadow-lg w-full max-w-6xl h-[80%] md:h-[80%] flex flex-col md:flex-row overflow-hidden">
                 {/* Chap qism */}
@@ -67,15 +69,14 @@ export default function LoginPage() {
                     <h2 className="text-3xl font-bold mb-4">Grantga ariza topshirish</h2>
                     <p className="text-lg">
                         Ushbu platforma orqali talabalar grant uchun ariza topshirishi
-                        mumkin. Hujjatlaringizni yuklab, natijalarni profil orqali kuzating.
+                        mumkin. Natijalarni profil orqali kuzating.
                     </p>
                     <ul className="mt-6 list-disc pl-5 text-blue-100 text-sm space-y-2">
                         <li>Profil orqali ariza topshiring</li>
-                        <li>PDF hujjatlarni biriktiring</li>
+                        {/*<li>PDF hujjatlarni biriktiring</li>*/}
                         <li>Holatni tekshirib boring</li>
                     </ul>
                 </div>
-
                 {/* O‘ng qism */}
                 <div className="md:w-1/2 p-8 flex flex-col justify-center">
                     <div className="flex justify-center mb-6">
@@ -108,13 +109,22 @@ export default function LoginPage() {
                             <label className="block text-gray-700 text-sm font-semibold mb-2">
                                 Password
                             </label>
-                            <input
-                                type="password"
-                                name="password"
-                                {...formik.getFieldProps("password")}
-                                className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
-                                required
-                            />
+                           <div className="relative">
+                               <input
+                                   type={showPassword ? "text" : "password"}
+                                   name="password"
+                                   {...formik.getFieldProps("password")}
+                                   className=" w-full  px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                                   required
+                               />
+                               <button
+                                   type="button"
+                                   onClick={togglePassword}
+                                   className="absolute right-2 top-3 text-xl items-center  text-blue-500"
+                               >
+                                   {showPassword ? <GrHide/> : <BiShow/>}
+                               </button>
+                           </div>
                         </div>
                         <button
                             type="submit"

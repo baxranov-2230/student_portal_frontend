@@ -35,6 +35,8 @@ axiosInstance.interceptors.request.use(async (config) => {
         if (isTokenExpired(token.access_token)) {
             // const newAccessToken = await refreshAccessToken(token.refresh_token);
             // config.headers.Authorization = `Bearer ${newAccessToken}`;
+            localStorage.removeItem("token");
+            return <Navigate to="/login" state={{from: location}} replace/>;
         } else {
             config.headers.Authorization = `Bearer ${token.access_token}`;
         }
@@ -42,6 +44,7 @@ axiosInstance.interceptors.request.use(async (config) => {
         // toast.error("Token davri tugadi");
         // await logout();
         // window.location.href = "/login";
+        localStorage.removeItem("token");
         return <Navigate to="/login" state={{from: location}} replace/>;
     }
 

@@ -14,21 +14,21 @@ import {
     GetTotalApplications
 } from "../Api/UserApi.jsx";
 
-function ListApplication() {
+function NoListApplication() {
     const [limit, setLimit] = useState(25);
     const [offset, setOffset] = useState(0);
     const [isModalOpen, setIsModalOpen] = useState(null);
 
     const {isError, isSuccess, isLoading, data: application, error, refetch} = useQuery({
-        queryKey: ["list-application", limit, offset, 3.5],
-        queryFn: () => GetApplications({limit, offset, min_gpa: 3.5 }),
+        queryKey: ["list-application", limit, offset, "max_gpa=3.5"],
+        queryFn: () => GetApplications({limit, offset, max_gpa: 3.5}),
     });
     const {data: total} = useQuery({
         queryKey: ["total-application"],
         queryFn: () => GetTotalApplications(),
     });
 
-    const totalApplications = total?.high || 0;
+    const totalApplications = total?.low || 0;
     const totalPages = Math.ceil(totalApplications / limit);
     const currentPage = Math.floor(offset / limit) + 1;
 
@@ -112,4 +112,4 @@ function ListApplication() {
     );
 }
 
-export default ListApplication;
+export default NoListApplication;

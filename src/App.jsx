@@ -27,6 +27,7 @@ import RatingBook from "./pages/RatingBook.jsx";
 import {UserMe} from "./Api/UserApi.jsx";
 import {jwtDecode} from "jwt-decode";
 import ListApplication from "./pages/ListApplication.jsx";
+import NoListApplication from "./pages/NoListApplication.jsx";
 
 
 function ProtectedRoute({children}) {
@@ -76,16 +77,16 @@ function App() {
         <div className="min-h-screen bg-[#F5F5F9] ">
             <div className={` ${!isLoginPage ? "pt-8" : ""}`}>
                 {!isLoginPage && <Sidebar isOpen={isSidebarOpen}/>}
-                <header className={`bg-white px-6 mr-6 transition-all duration-300  text-black sticky top-0   z-10 ${
+                <header className={`bg-white px-6 mx-6 transition-all duration-300  text-black sticky top-0   z-10 ${
                     !isLoginPage && isSidebarOpen
-                        ? "ml-72"
+                        ? "sm:ml-72"
                         : !isLoginPage
-                            ? "ml-28"
-                            : "hidden "
+                            ? "sm:ml-28"
+                            : "hidden"
                 }`}
                 >
 
-                    <div className="flex  items-center justify-between  h-16">
+                    <div className="w flex  items-center justify-between  h-16">
                         <div className="flex items-center space-x-4">
                             <MenuIcon
                                 className="h-6 w-6 cursor-pointer"
@@ -148,9 +149,9 @@ function App() {
                 <main
                     className={` p-6  transition-all duration-300 ${
                         !isLoginPage && isSidebarOpen
-                            ? "ml-64"
+                            ? "sm:ml-64"
                             : !isLoginPage
-                                ? "ml-20"
+                                ? "sm:ml-20"
                                 : ""
                     }`}
                 >
@@ -183,6 +184,14 @@ function App() {
                             element={
                                 <ProtectedRoute>
                                     <ListApplication/>
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="/no-list-application"
+                            element={
+                                <ProtectedRoute>
+                                    <NoListApplication/>
                                 </ProtectedRoute>
                             }
                         />
