@@ -13,6 +13,7 @@ import {LuNotebookText} from "react-icons/lu";
 import {MdOutlinePostAdd} from "react-icons/md";
 import {CgProfile} from "react-icons/cg";
 import {jwtDecode} from "jwt-decode";
+import { RiUpload2Line } from "react-icons/ri";
 
 function Sidebar({isOpen}) {
     const location = useLocation();
@@ -59,7 +60,11 @@ function Sidebar({isOpen}) {
         menuCategories = [
             {
                 id: "application",
-                items: [{icon: MdOutlinePostAdd, label: "Arizalar", path: "/application"}],
+                items: [{icon: MdOutlinePostAdd, label: "Akademik arizalar", path: "/application"}],
+            },
+            {
+                id: "social_application",
+                items: [{icon: RiUpload2Line, label: "Ijtimoiy arizalar", path: "/list-social-application"}],
             },
             {
                 id: "rating",

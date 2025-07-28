@@ -28,6 +28,9 @@ import {UserMe} from "./Api/UserApi.jsx";
 import {jwtDecode} from "jwt-decode";
 import ListApplication from "./pages/ListApplication.jsx";
 import NoListApplication from "./pages/NoListApplication.jsx";
+import CreateSocialApplication from "./pages/UserSocialApplication/CreateSocialApplication.jsx";
+import ListSocialApplications from "./pages/UserSocialApplication/ListSocialApplication.jsx";
+import UpdateSocialApplication from "./pages/UserSocialApplication/UpdateSocialApplication.jsx";
 
 
 function ProtectedRoute({children}) {
@@ -38,6 +41,8 @@ function ProtectedRoute({children}) {
     }
     return children;
 }
+
+
 
 function App() {
     const navigate = useNavigate();
@@ -208,6 +213,30 @@ function App() {
                             element={
                                 <ProtectedRoute>
                                     <Applications/>
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="/create-social-application"
+                            element={
+                                <ProtectedRoute>
+                                    <CreateSocialApplication/>
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="/list-social-application"
+                            element={
+                                <ProtectedRoute>
+                                    <ListSocialApplications/>
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="/update-social-application/:socialApplicationId"
+                            element={
+                                <ProtectedRoute>
+                                    <UpdateSocialApplication/>
                                 </ProtectedRoute>
                             }
                         />

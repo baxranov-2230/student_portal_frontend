@@ -28,6 +28,63 @@ export const CreateApplicationApi = async (applicationData) => {
     }
 };
 
+export const CreateSocialApi = async (socialData) => {
+    try {
+
+        const formData = new FormData();
+        formData.append("academic_performance", socialData.academic_performance);
+        if (socialData.reading_culture) {
+            formData.append('reading_culture', socialData.reading_culture);
+        }
+        if (socialData.five_initiatives) {
+            formData.append('five_initiatives', socialData.five_initiatives);
+        }
+        if (socialData.discipline_compliance) {
+            formData.append('discipline_compliance', socialData.discipline_compliance);
+        }
+        if (socialData.competition_achievements) {
+            formData.append('competition_achievements', socialData.competition_achievements);
+        }
+        if (socialData.attendance_punctuality) {
+            formData.append('attendance_punctuality', socialData.attendance_punctuality);
+        }
+        if (socialData.enlightenment_lessons) {
+            formData.append('enlightenment_lessons', socialData.enlightenment_lessons);
+        }
+        if (socialData.volunteering) {
+            formData.append('volunteering', socialData.volunteering);
+        }
+        if (socialData.cultural_visits) {
+            formData.append('cultural_visits', socialData.cultural_visits);
+        }
+        if (socialData.healthy_lifestyle) {
+            formData.append('healthy_lifestyle', socialData.healthy_lifestyle);
+        }
+        if (socialData.other_spiritual_activity) {
+            formData.append('other_spiritual_activity', socialData.other_spiritual_activity);
+        }
+        console.log(formData)
+        const response = await axiosInstance.post(
+            `${API_URL}/user/student_activity_scores/create`, formData,
+            {
+                headers: {
+                    "Content-Type": "multipart/form-data", // Fayl yuborish uchun zarur sarlavha
+                },
+            }
+        );
+        // console.log("Serverdan kelgan javob:", response.data)
+        return await response.data;
+    } catch (error) {
+        if (error.response && error.response.data.message) {
+            throw new Error(error.response.data.message);
+        }
+        throw new Error(error.response.data.detail);
+    }
+};
+export const GetUserSocialApplicationsApi = async () => {
+    const application = await axiosInstance.get(`${API_URL}/user/student_activity_scores/get_all`)
+    return application.data
+}
 export const GetApplications = async ({limit = 25, offset = 0, min_gpa, max_gpa}) => {
     const params = new URLSearchParams();
     params.append("limit", limit);
@@ -44,6 +101,70 @@ export const GetApplications = async ({limit = 25, offset = 0, min_gpa, max_gpa}
     );
     return application.data;
 };
+
+export const detailSocialApplicationApi = async (socialApplicationId) => {
+    const social = await axiosInstance.get(`${API_URL}/user/student_activity_scores/get_by_id/${socialApplicationId}`, {});
+    return social.data;
+};
+export const UpdateSocialApplicationApi = async (socialApplicationId, socialData) => {
+    try {
+        const formData = new FormData();
+        if (socialData.reading_culture) {
+            formData.append('reading_culture', socialData.reading_culture);
+        }
+        if (socialData.five_initiatives) {
+            formData.append('five_initiatives', socialData.five_initiatives);
+        }
+        if (socialData.discipline_compliance) {
+            formData.append('discipline_compliance', socialData.discipline_compliance);
+        }
+        if (socialData.competition_achievements) {
+            formData.append('competition_achievements', socialData.competition_achievements);
+        }
+        if (socialData.attendance_punctuality) {
+            formData.append('attendance_punctuality', socialData.attendance_punctuality);
+        }
+        if (socialData.enlightenment_lessons) {
+            formData.append('enlightenment_lessons', socialData.enlightenment_lessons);
+        }
+        if (socialData.volunteering) {
+            formData.append('volunteering', socialData.volunteering);
+        }
+        if (socialData.cultural_visits) {
+            formData.append('cultural_visits', socialData.cultural_visits);
+        }
+        if (socialData.healthy_lifestyle) {
+            formData.append('healthy_lifestyle', socialData.healthy_lifestyle);
+        }
+        if (socialData.other_spiritual_activity) {
+            formData.append('other_spiritual_activity', socialData.other_spiritual_activity);
+        }
+
+
+
+        for (let [key, value] of formData.entries()) {
+            console.log(`${key}: ${value}`);
+        }
+
+        const response = await axiosInstance.put(
+            `${API_URL}/user/student_activity_scores/update/${socialApplicationId}`, formData,
+            {
+                headers: {
+                    "Content-Type": "multipart/form-data", // Fayl jo‘natish uchun kerakli sarlavha
+                },
+            }
+        );
+        console.log("Serverdan kelgan javob:", response.data);
+        return await response.data; // Serverdan kelgan javobni qaytarish
+    } catch (error) {
+        // Xatolikni tekshirish va foydalanuvchiga tushunarli xabar qaytarish
+        if (error.response && error.response.data.message) {
+            throw new Error(error.response.data.message);
+        }
+        throw new Error(error.response.data.detail || "Fakultetni yangilashda xatolik yuz berdi");
+    }
+};
+
 
 export const GetUserApplications = async () => {
     const application = await axiosInstance.get(`${API_URL}/user/application/get_all`)
@@ -121,3 +242,5 @@ export const downloadApplicationAdminPdf = async (applicationId) => {
         alert("Faylni yuklab bo‘lmadi.");
     }
 };
+
+
